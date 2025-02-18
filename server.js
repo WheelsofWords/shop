@@ -5,18 +5,20 @@ require("dotenv").config();
 const cors = require("cors");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-const app = express();
+// 🚨 Usunięto podwójną deklarację `app = express();`
+
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cors());
+app.use(express.json());
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "shop.html"));
 });
 
-
 app.post("/create-checkout-session", async (req, res) => {
     try {
         const { cart } = req.body;
-        
+
         if (!cart || cart.length === 0) {
             return res.status(400).json({ error: "Koszyk jest pusty!" });
         }
@@ -34,8 +36,8 @@ app.post("/create-checkout-session", async (req, res) => {
             payment_method_types: ["card"],
             line_items: lineItems,
             mode: "payment",
-            success_url: "http://localhost:3000/thank-you.html", // 🔹 Poprawione przekierowanie!
-            cancel_url: "http://localhost:3000/shop.html",
+            success_url: "https://shop-13e1.onrender.com/thank-you.html", // 🔹 Poprawione przekierowanie!
+            cancel_url: "https://shop-13e1.onrender.com/shop.html",
         });
 
         res.json({ id: session.id });
