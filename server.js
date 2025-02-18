@@ -7,8 +7,12 @@ const cors = require("cors");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
-app.use(express.json());
-app.use(cors());
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "shop.html"));
+});
+
 
 app.post("/create-checkout-session", async (req, res) => {
     try {
